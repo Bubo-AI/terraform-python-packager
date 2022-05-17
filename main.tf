@@ -11,25 +11,9 @@ locals {
   temp_package_path = "/tmp/${basename(var.src_dir)}-${local.content_hash}"
 }
 
-# random_id resource will be used to keep track of changes to trigger
-# package and archive_zip steps
-resource "random_id" "hash" {
-  keepers = {
-    # Generate a new id each time source or dependencies has changed
-    content_hash = local.content_hash
-  }
-
-  byte_length = 8
-}
 
 # Prepare given source folder and dependencies to be packaged
 resource "null_resource" "package" {
-  # trigers only if script or dependencies were changed
-  triggers = {
-    content_hash = random_id.hash.id
-  }
-
-
   # Ensure an empty folder exists on the target path, then copy the contents of the
   # source folder and requirements.txt to the target path. requirements.txt file
   # is not required but can be useful to identify any unexpected behaviour in the
@@ -65,7 +49,7 @@ resource "null_resource" "package" {
 
 # Archive package folder as zip
 data "archive_file" "package" {
-  depends_on  = [null_resource.package, random_id.hash]
+  depends_on  = [null_resource.package]
   type        = "zip"
   source_dir  = local.temp_package_path
   output_path = var.package_name
