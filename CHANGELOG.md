@@ -9,3 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2022-05-17
 
 - Disable archive file caching to support idempotency - fix for CI/CD pipelines.
+
+## [0.1.2] - 2023-12-12
+
+- Add trigger to python packaging resource to ensure that the package is rebuilt when the source code changes and fix the initial build.
