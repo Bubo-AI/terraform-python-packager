@@ -44,11 +44,6 @@ resource "null_resource" "package" {
     -r ${local.requirements_path}
     EOT
   }
-
-  triggers = {
-    # trigger package creation if content hash changes
-    content = local.content_hash
-  }
 }
 
 
